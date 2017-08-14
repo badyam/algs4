@@ -17,7 +17,10 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
  */
 public class Percolation {
 
+    private static final byte OPEN = 1;
     private static final byte TOP_CONNECTED = 2;
+    private static final byte BOTTOM_CONNECTED = 4;
+    private static final byte PERCOLATED = TOP_CONNECTED | BOTTOM_CONNECTED;
 
     private final int n;
 
@@ -59,18 +62,14 @@ public class Percolation {
 
         numberOfOpenSites++;
 
-        // Checkstyle warns with 'The numeric literal '4' appears to be unnecessary', so inlined
-        // final byte BOTTOM_CONNECTED = 4;
-        // final byte PERCOLATED = 6;
-
-        int status = 1; // OPEN
+        int status = OPEN;
 
         if (row == 1) {
             status = status | TOP_CONNECTED;
         }
 
         if (row == n) {
-            status = status | 4;
+            status = status | BOTTOM_CONNECTED;
         }
 
         // look around and connect to other open sites
@@ -98,12 +97,9 @@ public class Percolation {
         }
 
         // compute new site status
-        // Checkstyle info: Using a loop in this method might be a performance bug.
-        // for (byte rootState : neighborsRootStates) {
-        //     status = status | rootState;
-        // }
-        // inlined
-        status = status | neighborStates[0] | neighborStates[1] | neighborStates[2] | neighborStates[3];
+         for (byte rootState : neighborStates) {
+             status = status | rootState;
+         }
 
         // update
         byte newState = (byte) status;
@@ -111,7 +107,7 @@ public class Percolation {
         state[connections.find(siteId)] = newState;
 
         if (!percolates) {
-            percolates = (status & 6) == 6;
+            percolates = (status & PERCOLATED) == PERCOLATED;
         }
     }
 
