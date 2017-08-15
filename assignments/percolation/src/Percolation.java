@@ -62,25 +62,25 @@ public class Percolation {
 
         numberOfOpenSites++;
 
-        int status = OPEN;
+        int siteState = OPEN;
 
         if (row == 1) {
-            status = status | TOP_CONNECTED;
+            siteState = siteState | TOP_CONNECTED;
         }
 
         if (row == n) {
-            status = status | BOTTOM_CONNECTED;
+            siteState = siteState | BOTTOM_CONNECTED;
         }
 
         // look around and connect to other open sites
-        byte[] neighborStates = new byte[4];
         for (int i = -1; i <= 1; i += 2) {
             // vertical neighbors (top, bottom)
             int y = row + i;
             if (y >= 1 && y <= n) {
                 int neighborId = getId(y, col);
                 if (state[neighborId] != 0) {
-                    neighborStates[i + 1] = state[connections.find(neighborId)];
+                    // mixin state of neighbor before union into site state
+                    siteState = siteState | state[connections.find(neighborId)];
                     connections.union(siteId, neighborId);
                 }
             }
@@ -90,24 +90,20 @@ public class Percolation {
             if (x >= 1 && x <= n) {
                 int neighborId = getId(row, x);
                 if (state[neighborId] != 0) {
-                    neighborStates[i + 2] = state[connections.find(neighborId)];
+                    // mixin state of neighbor before union into site state
+                    siteState = siteState | state[connections.find(neighborId)];
                     connections.union(siteId, neighborId);
                 }
             }
         }
 
-        // compute new site status
-         for (byte rootState : neighborStates) {
-             status = status | rootState;
-         }
-
         // update
-        byte newState = (byte) status;
+        byte newState = (byte) siteState;
         state[siteId] = newState;
         state[connections.find(siteId)] = newState;
 
         if (!percolates) {
-            percolates = (status & PERCOLATED) == PERCOLATED;
+            percolates = (siteState & PERCOLATED) == PERCOLATED;
         }
     }
 
