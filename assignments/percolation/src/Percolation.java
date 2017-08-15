@@ -72,23 +72,22 @@ public class Percolation {
             siteState = siteState | BOTTOM_CONNECTED;
         }
 
-        // look around and connect to other open sites
-        for (int i = -1; i <= 1; i += 2) {
-            // vertical neighbors (top, bottom)
-            int y = row + i;
-            if (y >= 1 && y <= n) {
-                int neighborId = getId(y, col);
-                if (state[neighborId] != 0) {
-                    // mixin state of neighbor before union into site state
-                    siteState = siteState | state[connections.find(neighborId)];
-                    connections.union(siteId, neighborId);
-                }
-            }
-
-            // horizontal neighbors (left, right)
-            int x = col + i;
-            if (x >= 1 && x <= n) {
-                int neighborId = getId(row, x);
+        // look around
+        // and connect to other open sites
+        // matrix flattening
+        //  -4  -3  -2
+        //  -1   0   1
+        //   2   3   4
+        // flatten range: [-3, -1,  1,  3]
+        // dx = i % 3; // [ 0, -1,  1,  0]
+        // dy = i / 2; // [-1,  0,  0,  1]
+        for (int i = -3; i <= 3; i += 2) {
+            int dy = i % 3;
+            int dx = i / 2;
+            int y = row + dy;
+            int x = col + dx;
+            if (y >= 1 && y <= n && x >= 1 && x <= n) {
+                int neighborId = getId(y, x);
                 if (state[neighborId] != 0) {
                     // mixin state of neighbor before union into site state
                     siteState = siteState | state[connections.find(neighborId)];
@@ -99,8 +98,12 @@ public class Percolation {
 
         // update
         byte newState = (byte) siteState;
-        state[siteId] = newState;
-        state[connections.find(siteId)] = newState;
+        int siteComponentId = connections.find(siteId);
+        if (siteComponentId == 0) {
+            state[siteId] = newState;
+        } else {
+            state[siteComponentId] = newState;
+        }
 
         if (!percolates) {
             percolates = (siteState & PERCOLATED) == PERCOLATED;
@@ -161,6 +164,7 @@ public class Percolation {
         StdOut.printf("1x1 does not percolate %s\n", !p.percolates() ? "OK" : "FAIL");
         p.open(1, 1);
         StdOut.printf("1x1 percolates %s\n", p.percolates() ? "OK" : "FAIL");
+        StdOut.printf("1x1 is full %s\n", p.isFull(1,1) ? "OK" : "FAIL");
 
         p = new Percolation(2);
         p.open(1, 1);
@@ -168,13 +172,6 @@ public class Percolation {
         p.open(1, 2);
         p.open(2, 1);
         p.open(2, 2);
-        StdOut.printf("2x2 percolates %s\n", p.percolates() ? "OK" : "FAIL");
-
-        // bottom up
-        p = new Percolation(2);
-        p.open(2, 1);
-        StdOut.printf("2x2 does not percolate %s\n", !p.percolates() ? "OK" : "FAIL");
-        p.open(1, 1);
         StdOut.printf("2x2 percolates %s\n", p.percolates() ? "OK" : "FAIL");
 
         // top bottom
@@ -185,16 +182,11 @@ public class Percolation {
         p.open(3, 3);
         StdOut.printf("top bottom percolates %s\n", p.percolates() ? "OK" : "FAIL");
 
-        p = new Percolation(3);
-        p.open(1, 1);
-        p.open(2, 1);
-        p.open(3, 1);
-        StdOut.printf("top bottom percolates %s\n", p.percolates() ? "OK" : "FAIL");
-
         // bottom up
         p = new Percolation(3);
         p.open(3, 2);
         p.open(2, 2);
+        StdOut.printf("does not percolate %s\n", !p.percolates() ? "OK" : "FAIL");
         p.open(1, 2);
         StdOut.printf("bottom up percolates %s\n", p.percolates() ? "OK" : "FAIL");
 
@@ -213,14 +205,28 @@ public class Percolation {
         StdOut.printf("middle top bottom percolates %s\n", p.percolates() ? "OK" : "FAIL");
 
         // complex path
-        p = new Percolation(3);
+        StdOut.println("complex path:");
+        p = new Percolation(4);
         p.open(2, 2);
-        p.open(1, 3);
         p.open(2, 3);
-        p.open(3, 2);
-        StdOut.printf("complex path percolates %s\n", p.percolates() ? "OK" : "FAIL");
-        StdOut.printf("numberOfOpenSites %s\n", p.numberOfOpenSites() == 4 ? "OK" : "FAIL");
+        p.open(1, 3);
+        StdOut.printf("\tis full %s\n", p.isFull(2,2) ? "OK" : "FAIL");
+        StdOut.printf("\tis full %s\n", p.isFull(2,3) ? "OK" : "FAIL");
+        StdOut.printf("\tis full %s\n", p.isFull(1,3) ? "OK" : "FAIL");
+        StdOut.printf("\tdoes not percolate %s\n", !p.percolates() ? "OK" : "FAIL");
+        p.open(3, 4);
+        StdOut.printf("\tis full %s\n", !p.isFull(3,4) ? "OK" : "FAIL");
+        p.open(2, 4);
+        StdOut.printf("\tis full %s\n", p.isFull(3,4) ? "OK" : "FAIL");
+        StdOut.printf("\tdoes not percolate %s\n", !p.percolates() ? "OK" : "FAIL");
 
+        p.open(4, 1);
+        StdOut.printf("\tis full %s\n", !p.isFull(4,1) ? "OK" : "FAIL");
+
+        p.open(4, 4);
+        StdOut.printf("\tpercolates %s\n", p.percolates() ? "OK" : "FAIL");
+        StdOut.printf("\tbackwash %s\n", !p.isFull(4,1) ? "OK" : "FAIL");
+        StdOut.printf("\tnumberOfOpenSites %s\n", p.numberOfOpenSites() == 7 ? "OK" : "FAIL");
     }
 
 }
