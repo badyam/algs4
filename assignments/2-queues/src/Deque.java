@@ -14,15 +14,15 @@ import edu.princeton.cs.algs4.StdOut;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class Deque<Item>implements Iterable<Item> {
+public class Deque<Item> implements Iterable<Item> {
 
     private Node first, last;
     private int size;
 
     private class Node {
-        Item item;
-        Node next;
-        Node prev;
+        private Item item;
+        private Node next;
+        private Node prev;
 
         Node(Item value) {
             item = value;
@@ -45,7 +45,7 @@ public class Deque<Item>implements Iterable<Item> {
         return size;
     }
 
-    public void addFirst(Item item){
+    public void addFirst(Item item) {
         if (item == null) {
             throw new IllegalArgumentException();
         }
@@ -69,8 +69,7 @@ public class Deque<Item>implements Iterable<Item> {
 
         if (isEmpty()) {
             init(item);
-        }
-        else {
+        } else {
             Node old = last;
             last = new Node(item);
             last.next = null;
@@ -129,9 +128,9 @@ public class Deque<Item>implements Iterable<Item> {
         return new QueueIterator();
     }
 
-    private class QueueIterator implements Iterator<Item>
-    {
+    private class QueueIterator implements Iterator<Item> {
         private Node current = first;
+
         public boolean hasNext() {
             return current != null;
         }
@@ -140,8 +139,7 @@ public class Deque<Item>implements Iterable<Item> {
             throw new UnsupportedOperationException();
         }
 
-        public Item next()
-        {
+        public Item next() {
             if (current == null) {
                 throw new NoSuchElementException();
             }
@@ -151,7 +149,7 @@ public class Deque<Item>implements Iterable<Item> {
         }
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Deque<Integer> d;
         int v;
 
@@ -190,7 +188,7 @@ public class Deque<Item>implements Iterable<Item> {
 
         d = fixture("addFirst removeLast");
         d.addFirst(458);
-         v = d.removeLast();
+        v = d.removeLast();
         test("returns added value", v == 458);
         test("is empty", d.isEmpty());
         test("size is zero", d.size() == 0);
@@ -225,8 +223,8 @@ public class Deque<Item>implements Iterable<Item> {
         try {
             iterator.next();
             test("4th next() throws NoSuchElementException", false);
-        } catch (Exception exception){
-            test("4th next() throws NoSuchElementException", exception instanceof NoSuchElementException);
+        } catch (NoSuchElementException exception) {
+            test("4th next() throws NoSuchElementException", true);
         }
 
     }
@@ -234,7 +232,7 @@ public class Deque<Item>implements Iterable<Item> {
     private static Deque<Integer> fixture(String description) {
         StdOut.println();
         StdOut.println(description);
-        return new Deque<Integer>();
+        return new Deque<>();
     }
 
     private static void test(String description, boolean assertion) {
