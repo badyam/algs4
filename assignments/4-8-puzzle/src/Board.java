@@ -10,7 +10,12 @@
  *----------------------------------------------------------------*/
 
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.StdRandom;
+
+import java.sql.Array;
+import java.util.Arrays;
 
 public class Board {
 
@@ -27,12 +32,19 @@ public class Board {
     public Board(int[][] blocks) {
         n = blocks.length;
         this.blocks = new int[n * n];
-        for (int i = 0; i < n; i++)
-            for (int j = 0; j < n; j++) {
-                int k = i * n + j;
-                this.blocks[k] = blocks[i][j];
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n; c++) {
+                int i = r * n + c;
+                this.blocks[i] = blocks[r][c];
             }
     }
+
+    // constructor which does not copy array
+    private Board(int n, int[] blocks) {
+        this.n = n;
+        this.blocks = blocks;
+    }
+
 
     // board dimension n
     public int dimension() {
@@ -52,17 +64,19 @@ public class Board {
     // sum of Manhattan distances between blocks and goal
     public int manhattan() {
         int m = 0;
-        for (int i = 0; i < blocks.length; i++) {
-            if (blocks[i] != 0 && blocks[i] != i + 1){
-                int asIsPos = i;
-                int toBePos = blocks[i] - 1;
-                int y1 = asIsPos / n;
-                int x1 = asIsPos % n;
-                int y2 = toBePos / n;
-                int x2 = toBePos % n;
-                m += Math.abs(y2 - y1) + Math.abs(x2 - x1);
+        // for better performance let's take [r,c] coordinates
+        // to have "*" operation, rather than "/" and "%"
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n; c++) {
+                int i = r * n + c;
+                int toBe = blocks[i] - 1;
+                // current block isn't empty (0)
+                if (toBe != -1) {
+                    int tr = toBe / n;
+                    int tc = toBe % n;
+                    m += Math.abs(tr - r) + Math.abs(tc - c);
+                }
             }
-        }
         return m;
     }
 
@@ -77,7 +91,17 @@ public class Board {
 
     // a board that is obtained by exchanging any pair of blocks
     public Board twin() {
-        return null;
+        // sophisticated algorithm isn't required, just try swap two first blocks
+        int first = 0;
+        if (blocks[first] == 0) first++;
+
+        // take block at right
+        int second = first + 1;
+
+        // it may be in the beginning of next row, then just take the block right under first
+        if (second / n > 0) second = first + n;
+
+        return twin(first, second);
     }
 
     // does this board equal y?
@@ -99,25 +123,50 @@ public class Board {
 
     // all neighboring boards
     public Iterable<Board> neighbors() {
-        return null;
+        Stack<Board> neighbors = new Stack<>();
+        // h-permutations
+        for (int r = 0; r < n; r++)
+            for (int c = 0; c < n - 1; c++)
+                neighbors.push(twin(r * n + c, r * n + c + 1));
+
+        // v-permutations
+        for (int c = 0; c < n; c++)
+            for (int r = 0; r < n - 1; r++)
+                neighbors.push(twin(r * n + c, (r + 1) * n + c));
+
+        return neighbors;
     }
 
     // string representation of this board (in the output format specified below)
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(String.format("%d\n", n));
         for (int i = 0; i < blocks.length; i++) {
             if (i > 0 && i % n == 0) sb.append("\n");
-            sb.append(String.format("%5s", blocks[i] == 0 ? " " : Integer.toString(blocks[i])));
+            sb.append(String.format("%3d", blocks[i]));
         }
 
         return sb.toString();
+    }
+
+    private static void swap(int[] target, int from, int to) {
+        int v = target[to];
+        target[to] = target[from];
+        target[from] = v;
+    }
+
+    // creates new board which is copy of current with on swap of given block (zero-block is OK)
+    private Board twin(int i, int k) {
+        int[] copy = Arrays.copyOf(blocks, blocks.length);
+        swap(copy, i, k);
+        return new Board(n, copy);
     }
 
     public static void main(String[] args) {
         Board board;
 
         board = fixture("puzzle00");
-        test("Dimension equals 100", board.dimension() == 10);
+        test("Dimension equals 10", board.dimension() == 10);
         test("It's a goal board", board.isGoal());
         test("hamming is 0", board.hamming() == 0);
         test("manhattan is 0", board.manhattan() == 0);
@@ -133,7 +182,15 @@ public class Board {
         test("It isn't a goal board", !board.isGoal());
         test("hamming is 8", board.hamming() == 7);
         test("manhattan is 21", board.manhattan() == 21);
-        StdOut.println(board.manhattan());
+
+        StdOut.println("-- neighbors --");
+        int nc = 0;
+        for (Board neighbor : board.neighbors()) {
+            StdOut.println(neighbor);
+            nc++;
+        }
+        test("neighbors count is 2 * n * (n - 1)", nc == 2 * board.dimension() * (board.dimension() - 1));
+
     }
 
     private static Board fixture(String inputFileName) {
@@ -149,7 +206,7 @@ public class Board {
                 blocks[i][j] = in.readInt();
 
         Board b = new Board(blocks);
-        StdOut.println(b.toString());
+        StdOut.println(b);
         return b;
     }
 

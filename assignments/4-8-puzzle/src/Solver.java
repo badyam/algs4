@@ -10,12 +10,16 @@
  *----------------------------------------------------------------*/
 
 import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.MinPQ;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
+    private int moves = 0;
+
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
+        MinPQ<int> pq = new MinPQ<int>();
 
     }
 
