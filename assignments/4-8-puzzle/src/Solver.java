@@ -18,8 +18,6 @@ import java.util.Comparator;
 
 public class Solver {
 
-    private final int moves;
-    private final boolean isSolvable;
     private Stack<Board> solution = null;
 
     // find a solution to the initial board (using the A* algorithm)
@@ -28,11 +26,10 @@ public class Solver {
         MinPQ<SearchNode> queue = new MinPQ<>(comparator);
         MinPQ<SearchNode> twinQueue = new MinPQ<>(comparator);
 
-        int move = 0;
-        SearchNode node = new SearchNode(initial, move, null);
+        SearchNode node = new SearchNode(initial, null);
         queue.insert(node);
 
-        twinQueue.insert(new SearchNode(initial.twin(), move, null));
+        twinQueue.insert(new SearchNode(initial.twin(), null));
 
         boolean win = false;
         boolean twinWin = false;
@@ -46,16 +43,13 @@ public class Solver {
 
                 // none wins
                 if (!twinWin) {
-                    move++;
-                    moveNext(queue, node, move);
-                    moveNext(twinQueue, twinNode, move);
+                    moveNext(queue, node);
+                    moveNext(twinQueue, twinNode);
                 }
             }
         }
 
-        moves = move;
-        isSolvable = win;
-        if (isSolvable) {
+        if (win) {
             solution = new Stack<>();
             while (node != null) {
                 solution.push(node.board);
@@ -66,12 +60,12 @@ public class Solver {
 
     // is the initial board solvable?
     public boolean isSolvable() {
-        return isSolvable;
+        return solution != null;
     }
 
     // min number of moves to solve initial board; -1 if unsolvable
     public int moves() {
-        return moves;
+        return solution != null ? solution.size() - 1 : -1;
     }
 
     // sequence of boards in a shortest solution; null if unsolvable
@@ -79,11 +73,11 @@ public class Solver {
         return solution;
     }
 
-    private void moveNext(MinPQ<SearchNode> queue, SearchNode node, int move) {
+    private void moveNext(MinPQ<SearchNode> queue, SearchNode node) {
         for (Board neighbor : node.board.neighbors()) {
             // critical optimization
             if (node.prevNode == null || !node.prevNode.board.equals(neighbor))
-                queue.insert(new SearchNode(neighbor, move, node));
+                queue.insert(new SearchNode(neighbor, node));
         }
     }
 
@@ -92,10 +86,12 @@ public class Solver {
         private final Board board;
         private final int manhattan;
         private final int priority;
+        private final int move;
 
-        private SearchNode(Board board, int move, SearchNode prevNode) {
+        private SearchNode(Board board, SearchNode prevNode) {
             this.board = board;
             this.prevNode = prevNode;
+            move = prevNode == null ? 0 : prevNode.move + 1;
             manhattan = board.manhattan();
             priority = manhattan + move;
         }
