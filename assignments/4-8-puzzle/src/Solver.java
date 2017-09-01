@@ -11,7 +11,7 @@
 
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
-import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
 import java.util.Comparator;
@@ -19,38 +19,49 @@ import java.util.Comparator;
 public class Solver {
 
     private final int moves;
-    private final Queue<Board> solution = new Queue<>();
     private final boolean isSolvable;
+    private Stack<Board> solution = null;
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
-        MinPQ<SearchNode> queue = new MinPQ<>(new NodeComparator());
+        final NodeComparator comparator = new NodeComparator();
+        MinPQ<SearchNode> queue = new MinPQ<>(comparator);
+        MinPQ<SearchNode> twinQueue = new MinPQ<>(comparator);
 
         int move = 0;
         SearchNode node = new SearchNode(initial, move, null);
         queue.insert(node);
 
-        // add alternative to detect unsolvable case
-        // Board alternative = initial.twin();
-        // queue.insert(alternative);
+        twinQueue.insert(new SearchNode(initial.twin(), move, null));
 
-        boolean done = false;
-        while (!done) {
+        boolean win = false;
+        boolean twinWin = false;
+        while (!win && !twinWin) {
             node = queue.delMin();
-            solution.enqueue(node.board);
+            SearchNode twinNode = twinQueue.delMin();
             move++;
 
-            if (node.board.isGoal()) {
-                done = true;
-            } else {
-                for (Board neighbor : node.board.neighbors()) {
-                    queue.insert(new SearchNode(neighbor, move, node));
+            win = node.board.isGoal();
+            if (!win) {
+                twinWin = twinNode.board.isGoal();
+
+                // none wins
+                if (!twinWin) {
+                    moveNext(queue, node, move);
+                    moveNext(twinQueue, twinNode, move);
                 }
             }
         }
 
         moves = move;
-        isSolvable = true;
+        isSolvable = win;
+        if (isSolvable) {
+            solution = new Stack<>();
+            while (node != null) {
+                solution.push(node.board);
+                node = node.prevNode;
+            }
+        }
     }
 
     // is the initial board solvable?
@@ -66,6 +77,14 @@ public class Solver {
     // sequence of boards in a shortest solution; null if unsolvable
     public Iterable<Board> solution() {
         return solution;
+    }
+
+    private void moveNext(MinPQ<SearchNode> queue, SearchNode node, int move) {
+        for (Board neighbor : node.board.neighbors()) {
+            // critical optimization
+            if (node.prevNode == null || !node.prevNode.board.equals(neighbor))
+                queue.insert(new SearchNode(neighbor, move, node));
+        }
     }
 
     private static class SearchNode {
