@@ -39,7 +39,6 @@ public class Solver {
         while (!win && !twinWin) {
             node = queue.delMin();
             SearchNode twinNode = twinQueue.delMin();
-            move++;
 
             win = node.board.isGoal();
             if (!win) {
@@ -47,6 +46,7 @@ public class Solver {
 
                 // none wins
                 if (!twinWin) {
+                    move++;
                     moveNext(queue, node, move);
                     moveNext(twinQueue, twinNode, move);
                 }

@@ -12,15 +12,15 @@
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
-import edu.princeton.cs.algs4.StdRandom;
-
-import java.sql.Array;
 import java.util.Arrays;
 
 public class Board {
 
     private final int n;
     private final int[] blocks;
+
+    // index of blank position
+    private final int blank;
 
     // In generic case the goal board can be any combination of blocks.
     // In study case it's always ordered array with last 0
@@ -32,19 +32,25 @@ public class Board {
     public Board(int[][] blocks) {
         n = blocks.length;
         this.blocks = new int[n * n];
+        int b = -1;
         for (int r = 0; r < n; r++)
             for (int c = 0; c < n; c++) {
                 int i = r * n + c;
-                this.blocks[i] = blocks[r][c];
+                int v = blocks[r][c];
+                this.blocks[i] = v;
+                if (v == 0)
+                    b = i;
             }
+
+        blank = b;
     }
 
     // constructor which does not copy array
-    private Board(int n, int[] blocks) {
+    private Board(int n, int[] blocks, int blank) {
         this.n = n;
         this.blocks = blocks;
+        this.blank = blank;
     }
-
 
     // board dimension n
     public int dimension() {
@@ -55,7 +61,7 @@ public class Board {
     public int hamming() {
         int h = 0;
         for (int i = 0; i < blocks.length; i++)
-            if (blocks[i] != 0 && blocks[i] != i + 1)
+            if (i != blank && blocks[i] != i + 1)
                 h++;
 
         return h;
@@ -69,39 +75,38 @@ public class Board {
         for (int r = 0; r < n; r++)
             for (int c = 0; c < n; c++) {
                 int i = r * n + c;
+                if (i == blank)
+                    continue;
                 int toBe = blocks[i] - 1;
-                // current block isn't empty (0)
-                if (toBe != -1) {
-                    int tr = toBe / n;
-                    int tc = toBe % n;
-                    m += Math.abs(tr - r) + Math.abs(tc - c);
-                }
+                int tr = toBe / n;
+                int tc = toBe % n;
+                m += Math.abs(tr - r) + Math.abs(tc - c);
             }
         return m;
     }
 
     // is this board the goal board?
     public boolean isGoal() {
+        // quick check
+        if (blank != blocks.length - 1)
+            return false;
+
+        // full check
         for (int i = 0; i < blocks.length - 1; i++)
             if (blocks[i] != i + 1)
                 return false;
 
-        return blocks[blocks.length - 1] == 0;
+        return true;
     }
 
     // a board that is obtained by exchanging any pair of blocks
     public Board twin() {
         // sophisticated algorithm isn't required, just try swap two first blocks
-        int first = 0;
-        if (blocks[first] == 0) first++;
-
-        // take block at right
-        int second = first + 1;
-
-        // it may be in the beginning of next row, then just take the block right under first
-        if (second / n > 0) second = first + n;
-
-        return twin(first, second);
+        return blank == 0
+                ? twin(1, 2)
+                : blank == 1
+                    ? twin(0, 2)
+                    : twin(0, 1);
     }
 
     // does this board equal y?
@@ -122,17 +127,24 @@ public class Board {
     }
 
     // all neighboring boards
+    // that boards, that can be obtained by swapping one block with blank
     public Iterable<Board> neighbors() {
         Stack<Board> neighbors = new Stack<>();
-        // h-permutations
-        for (int r = 0; r < n; r++)
-            for (int c = 0; c < n - 1; c++)
-                neighbors.push(twin(r * n + c, r * n + c + 1));
+
+        int r = blank / n;
+        int c = blank % n;
 
         // v-permutations
-        for (int c = 0; c < n; c++)
-            for (int r = 0; r < n - 1; r++)
-                neighbors.push(twin(r * n + c, (r + 1) * n + c));
+        if (r > 0)
+            neighbors.push(twin((r - 1) * n + c, blank));
+        if (r < n - 1)
+            neighbors.push(twin((r + 1) * n + c, blank));
+
+        // h-permutations
+        if (c > 0)
+            neighbors.push(twin(r * n + c - 1, blank));
+        if (c < n - 1)
+            neighbors.push(twin(r * n + c + 1, blank));
 
         return neighbors;
     }
@@ -140,10 +152,10 @@ public class Board {
     // string representation of this board (in the output format specified below)
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%d\n", n));
+        sb.append(String.format("%d%n", n));
         for (int i = 0; i < blocks.length; i++) {
-            if (i > 0 && i % n == 0) sb.append("\n");
-            sb.append(String.format("%3d", blocks[i]));
+            if (i > 0 && i % n == 0) sb.append(String.format("%n"));
+            sb.append(String.format("%2d ", blocks[i]));
         }
 
         return sb.toString();
@@ -155,11 +167,12 @@ public class Board {
         target[from] = v;
     }
 
-    // creates new board which is copy of current with on swap of given block (zero-block is OK)
+    // creates new board which is copy of current with two blocks swapped (zero-block is OK)
     private Board twin(int i, int k) {
         int[] copy = Arrays.copyOf(blocks, blocks.length);
         swap(copy, i, k);
-        return new Board(n, copy);
+        int newBlank = i == blank ? k : k == blank ? i : blank;
+        return new Board(n, copy, newBlank);
     }
 
     public static void main(String[] args) {
@@ -183,14 +196,25 @@ public class Board {
         test("hamming is 8", board.hamming() == 7);
         test("manhattan is 21", board.manhattan() == 21);
 
+        board = fixture("puzzle2x2-unsolvable2");
+        test("Dimension equals 2", board.dimension() == 2);
+        test("It isn't a goal board", !board.isGoal());
+        test("hamming is 3", board.hamming() == 3);
+        test("manhattan is 4", board.manhattan() == 4);
+        int nc = count(board.neighbors());
+        test("neighbors count is 2", nc == 2);
+
+        Board twin = board.twin();
+        test("twin is {0, 2, 1, 3}",
+                twin.blocks[0] == 0 &&
+                twin.blocks[1] == 2 &&
+                twin.blocks[2] == 1 &&
+                twin.blocks[3] == 3);
+
         StdOut.println("-- neighbors --");
-        int nc = 0;
         for (Board neighbor : board.neighbors()) {
             StdOut.println(neighbor);
-            nc++;
         }
-        test("neighbors count is 2 * n * (n - 1)", nc == 2 * board.dimension() * (board.dimension() - 1));
-
     }
 
     private static Board fixture(String inputFileName) {
@@ -212,5 +236,13 @@ public class Board {
 
     private static void test(String description, boolean assertion) {
         StdOut.printf(" * %-32s %s\n", description, assertion ? "PASSED" : "FAILED");
+    }
+
+    private static int count(Iterable<Board> boards) {
+        int c = 0;
+        for (Board neighbor : boards) {
+            c++;
+        }
+        return c;
     }
 }
