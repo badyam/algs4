@@ -22,6 +22,8 @@ public class Solver {
 
     // find a solution to the initial board (using the A* algorithm)
     public Solver(Board initial) {
+        if (initial == null) throw new IllegalArgumentException();
+
         final NodeComparator comparator = new NodeComparator();
         MinPQ<SearchNode> queue = new MinPQ<>(comparator);
         MinPQ<SearchNode> twinQueue = new MinPQ<>(comparator);
