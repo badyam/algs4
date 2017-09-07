@@ -9,16 +9,25 @@
  *  http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html
  *----------------------------------------------------------------*/
 
-import edu.princeton.cs.algs4.Bag;
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.SET;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.*;
 
 public class KdTree {
 
-    private final SET<Point2D> set = new SET<>();
+    private static class Node {
+        private final Point2D p;      // the point
+        private RectHV rect;    // the axis-aligned rectangle corresponding to this node
+        private Node left;        // the left/bottom subtree
+        private Node right;        // the right/top subtree
+
+        public Node(Point2D point) {
+
+            this.p = point;
+        }
+
+    }
+
+    private Node root = null;
+    private int size = 0;
 
     // construct an empty set of points
     public KdTree() {
@@ -27,46 +36,110 @@ public class KdTree {
 
     // is the set empty?
     public boolean isEmpty() {
-        return set.isEmpty();
+        return size == 0;
     }
 
     // number of points in the set
     public int size() {
-        return set.size();
+        return size;
     }
 
     // add the point to the set (if it is not already in the set)
     public void insert(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
-        if (!set.contains(p)) set.add(p);
+
+        if (root == null) {
+            root = new Node(p);
+            size = 1;
+            return;
+        }
+
+        if (contains(p)) return;
+
+        insert(root, true, p);
+        size++;
+    }
+
+    private void insert(Node intoNode, boolean isV, Point2D point) {
+        int cmp = isV
+                ? Double.compare(point.x(), intoNode.p.x())
+                : Double.compare(point.y(), intoNode.p.y());
+
+        if (cmp <= 0) { // left
+            if (intoNode.left == null)
+                intoNode.left = new Node(point);
+            else
+                insert(intoNode.left, !isV, point);
+        } else { // right
+            if (intoNode.right == null)
+                intoNode.right = new Node(point);
+            else
+                insert(intoNode.right, !isV, point);
+        }
     }
 
     // does the set contain point p?
     public boolean contains(Point2D p) {
-        return set.contains(p);
+        if (p == null) throw new IllegalArgumentException();
+
+        return find(root, true, p) != null;
     }
+
+    /**
+     * @param node  - node to search in (inclusive)
+     * @param isV   - if true - vertical divider (left and right); if false - horizontal (top and bottom)
+     * @param point - point to find
+     * @return node
+     */
+    private Node find(Node node, boolean isV, Point2D point) {
+        if (node == null) return null;
+        if (node.p.equals(point)) return node;
+        int cmp = isV
+                ? Double.compare(point.x(), node.p.x())
+                : Double.compare(point.y(), node.p.y());
+        if (cmp <= 0) return find(node.left, !isV, point);
+        else return find(node.right, !isV, point);
+    }
+
 
     // draw all points to standard draw
     public void draw() {
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setXscale(-0.1, 1.1);
-        StdDraw.setYscale(-0.1, 1.1);
-        StdDraw.setPenRadius(0.02);
-        for (Point2D p : set) {
-            p.draw();
-        }
+        drawNode(root, null, true, true);
+    }
+
+    public void drawNode(Node node, Node parent, boolean isV, boolean isLeft) {
+        if (node == null) return;
+
+        // draw point
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+        node.p.draw();
+
+        // draw lines
         StdDraw.setPenRadius();
-        StdDraw.show();
+        if (isV) {
+            StdDraw.setPenColor(StdDraw.RED);
+            if (isLeft)
+                StdDraw.line(node.p.x(), 0, node.p.x(), parent != null ? parent.p.y() : 1);
+            else
+                StdDraw.line(node.p.x(), parent != null ? parent.p.y() : 0, node.p.x(), 1);
+        } else {
+            StdDraw.setPenColor(StdDraw.BLUE);
+            if (isLeft)
+                StdDraw.line(0, node.p.y(), parent != null ? parent.p.x() : 1, node.p.y());
+            else
+                StdDraw.line(parent != null ? parent.p.x() : 0, node.p.y(), 1, node.p.y());
+        }
+
+        drawNode(node.left, node, !isV, true);
+        drawNode(node.right, node, !isV, false);
     }
 
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
 
-        final Bag<Point2D> result = new Bag<>();
-        for (Point2D p : set) {
-            if (rect.contains(p)) result.add(p);
-        }
+        final Queue<Point2D> result = new Queue<>();
 
         return result;
     }
@@ -77,14 +150,6 @@ public class KdTree {
 
         Point2D np = null;
         double minDistance = Double.MAX_VALUE;
-        for (Point2D p : set) {
-            double distance = p.distanceTo(target);
-            if (distance < minDistance) {
-                np = p;
-                minDistance = distance;
-            }
-        }
-
         return np;
     }
 
@@ -96,11 +161,12 @@ public class KdTree {
         test("is empty", pointSET.isEmpty());
         test("size is zero", pointSET.size() == 0);
 
-        pointSET = fixture("insert");
+        pointSET = fixture("insert two points");
         pointSET.insert(new Point2D(0.5, 0.5));
         pointSET.insert(new Point2D(0.2, 0.2));
         test("is not empty", !pointSET.isEmpty());
-        test("size is 1", pointSET.size() == 2);
+        test("size is 2", pointSET.size() == 2);
+
     }
 
     private static KdTree fixture(String description) {

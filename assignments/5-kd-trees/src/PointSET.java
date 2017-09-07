@@ -9,12 +9,7 @@
  *  http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html
  *----------------------------------------------------------------*/
 
-import edu.princeton.cs.algs4.Bag;
-import edu.princeton.cs.algs4.Point2D;
-import edu.princeton.cs.algs4.RectHV;
-import edu.princeton.cs.algs4.SET;
-import edu.princeton.cs.algs4.StdDraw;
-import edu.princeton.cs.algs4.StdOut;
+import edu.princeton.cs.algs4.*;
 
 public class PointSET {
 
@@ -43,29 +38,26 @@ public class PointSET {
 
     // does the set contain point p?
     public boolean contains(Point2D p) {
+        if (p == null) throw new IllegalArgumentException();
         return set.contains(p);
     }
 
     // draw all points to standard draw
     public void draw() {
-        StdDraw.enableDoubleBuffering();
-        StdDraw.setXscale(-0.1, 1.1);
-        StdDraw.setYscale(-0.1, 1.1);
-        StdDraw.setPenRadius(0.02);
+        StdDraw.setPenRadius(0.01);
         for (Point2D p : set) {
             p.draw();
         }
         StdDraw.setPenRadius();
-        StdDraw.show();
     }
 
     // all points that are inside the rectangle (or on the boundary)
     public Iterable<Point2D> range(RectHV rect) {
         if (rect == null) throw new IllegalArgumentException();
 
-        final Bag<Point2D> result = new Bag<>();
+        final Queue<Point2D> result = new Queue<>();
         for (Point2D p : set) {
-            if (rect.contains(p)) result.add(p);
+            if (rect.contains(p)) result.enqueue(p);
         }
 
         return result;
@@ -96,11 +88,11 @@ public class PointSET {
         test("is empty", pointSET.isEmpty());
         test("size is zero", pointSET.size() == 0);
 
-        pointSET = fixture("insert");
+        pointSET = fixture("insert two points");
         pointSET.insert(new Point2D(0.5, 0.5));
         pointSET.insert(new Point2D(0.2, 0.2));
         test("is not empty", !pointSET.isEmpty());
-        test("size is 1", pointSET.size() == 2);
+        test("size is 2", pointSET.size() == 2);
 
         pointSET = fixture("nearest");
         pointSET.insert(new Point2D(0.5, 0.5));
@@ -120,8 +112,8 @@ public class PointSET {
             points[i++] = p;
         }
         test("two points", i == 2);
-        test("(0.5, 0.5)", points[0].equals(new Point2D(0.5, 0.5)));
-        test("(0.3, 0.3)", points[1].equals(new Point2D(0.3, 0.3)));
+        test("(0.3, 0.3)", points[0].equals(new Point2D(0.3, 0.3)));
+        test("(0.5, 0.5)", points[1].equals(new Point2D(0.5, 0.5)));
     }
 
     private static PointSET fixture(String description) {
