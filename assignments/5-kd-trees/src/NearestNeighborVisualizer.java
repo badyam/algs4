@@ -15,6 +15,8 @@ import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.Color;
+
 public class NearestNeighborVisualizer {
 
     public static void main(String[] args) {
@@ -22,6 +24,7 @@ public class NearestNeighborVisualizer {
         In in = new In(filename);
 
         StdDraw.enableDoubleBuffering();
+        StdDraw.setScale(-0.1, 1.1);
 
         // initialize the two data structures with point from standard input
         PointSET brute = new PointSET();
@@ -41,21 +44,37 @@ public class NearestNeighborVisualizer {
             double y = StdDraw.mouseY();
             Point2D query = new Point2D(x, y);
 
-            // draw all of the points
             StdDraw.clear();
+            StdDraw.setPenColor(Color.GREEN);
+            StdDraw.setPenRadius(0.03);
+            query.draw();
+
+            // draw all of the points
+            StdDraw.setPenColor(Color.LIGHT_GRAY);
+            StdDraw.setPenRadius();
+            StdDraw.rectangle(0.5, 0.5, 0.5, 0.5);
+
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.setPenRadius(0.01);
             brute.draw();
 
             // draw in red the nearest neighbor (using brute-force algorithm)
-            StdDraw.setPenRadius(0.03);
+            Point2D bf = brute.nearest(query);
             StdDraw.setPenColor(StdDraw.RED);
-            brute.nearest(query).draw();
-            StdDraw.setPenRadius(0.02);
+            StdDraw.setPenRadius();
+            StdDraw.textRight(query.x() + 0.03, query.y() - 0.03, Double.toString(query.distanceTo(bf)));
+            StdDraw.setPenRadius(0.03);
+            bf.draw();
 
             // draw in blue the nearest neighbor (using kd-tree algorithm)
+            Point2D kd = kdtree.nearest(query);
             StdDraw.setPenColor(StdDraw.BLUE);
-            kdtree.nearest(query).draw();
+            StdDraw.setPenRadius();
+            StdDraw.textRight(query.x() + 0.03, query.y() + 0.03, Double.toString(query.distanceTo(kd)));
+            StdDraw.setPenRadius(0.02);
+            kd.draw();
+
+
             StdDraw.show();
             StdDraw.pause(40);
         }

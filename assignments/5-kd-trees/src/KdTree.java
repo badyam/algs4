@@ -9,21 +9,28 @@
  *  http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html
  *----------------------------------------------------------------*/
 
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class KdTree {
 
     private static class Node {
-        private final Point2D p;      // the point
-        private RectHV rect;    // the axis-aligned rectangle corresponding to this node
+        private final Point2D point;      // the point
         private Node left;        // the left/bottom subtree
         private Node right;        // the right/top subtree
 
-        public Node(Point2D point) {
+        private Node(Point2D point) {
 
-            this.p = point;
+            this.point = point;
         }
+    }
 
+    private static class NearestChampion {
+        private double distance;
+        private Point2D point;
     }
 
     private Node root = null;
@@ -60,25 +67,25 @@ public class KdTree {
         size++;
     }
 
-    private void insert(Node intoNode, boolean isV, Point2D point) {
+    private void insert(Node parent, boolean isV, Point2D point) {
         int cmp = isV
-                ? Double.compare(point.x(), intoNode.p.x())
-                : Double.compare(point.y(), intoNode.p.y());
+                ? Double.compare(point.x(), parent.point.x())
+                : Double.compare(point.y(), parent.point.y());
 
-        if (cmp <= 0) { // left
-            if (intoNode.left == null)
-                intoNode.left = new Node(point);
+        if (cmp >= 0) { // left
+            if (parent.left == null)
+                parent.left = new Node(point);
             else
-                insert(intoNode.left, !isV, point);
+                insert(parent.left, !isV, point);
         } else { // right
-            if (intoNode.right == null)
-                intoNode.right = new Node(point);
+            if (parent.right == null)
+                parent.right = new Node(point);
             else
-                insert(intoNode.right, !isV, point);
+                insert(parent.right, !isV, point);
         }
     }
 
-    // does the set contain point p?
+    // does the set contain point?
     public boolean contains(Point2D p) {
         if (p == null) throw new IllegalArgumentException();
 
@@ -93,46 +100,46 @@ public class KdTree {
      */
     private Node find(Node node, boolean isV, Point2D point) {
         if (node == null) return null;
-        if (node.p.equals(point)) return node;
+        if (node.point.equals(point)) return node;
         int cmp = isV
-                ? Double.compare(point.x(), node.p.x())
-                : Double.compare(point.y(), node.p.y());
-        if (cmp <= 0) return find(node.left, !isV, point);
-        else return find(node.right, !isV, point);
+                ? Double.compare(point.x(), node.point.x())
+                : Double.compare(point.y(), node.point.y());
+
+        return find(cmp >= 0 ? node.left : node.right, !isV, point);
     }
 
 
     // draw all points to standard draw
     public void draw() {
-        drawNode(root, null, true, true);
+        drawNode(root, new RectHV(0, 0, 1, 1), true);
     }
 
-    public void drawNode(Node node, Node parent, boolean isV, boolean isLeft) {
+    private void drawNode(Node node, RectHV area, boolean isV) {
         if (node == null) return;
 
-        // draw point
-        StdDraw.setPenColor(StdDraw.BLACK);
-        StdDraw.setPenRadius(0.01);
-        node.p.draw();
-
+        RectHV leftArea, rightArea;
         // draw lines
         StdDraw.setPenRadius();
         if (isV) {
+            rightArea = getRightArea(node.point, area);
+            leftArea = getLeftArea(node.point, area);
+
             StdDraw.setPenColor(StdDraw.RED);
-            if (isLeft)
-                StdDraw.line(node.p.x(), 0, node.p.x(), parent != null ? parent.p.y() : 1);
-            else
-                StdDraw.line(node.p.x(), parent != null ? parent.p.y() : 0, node.p.x(), 1);
+            StdDraw.line(node.point.x(), leftArea.ymin(), node.point.x(), leftArea.ymax());
         } else {
+            rightArea = getBottomArea(node.point, area);
+            leftArea = getTopArea(node.point, area);
+
             StdDraw.setPenColor(StdDraw.BLUE);
-            if (isLeft)
-                StdDraw.line(0, node.p.y(), parent != null ? parent.p.x() : 1, node.p.y());
-            else
-                StdDraw.line(parent != null ? parent.p.x() : 0, node.p.y(), 1, node.p.y());
+            StdDraw.line(leftArea.xmin(), node.point.y(), leftArea.xmax(), node.point.y());
         }
 
-        drawNode(node.left, node, !isV, true);
-        drawNode(node.right, node, !isV, false);
+        StdDraw.setPenColor(StdDraw.BLACK);
+        StdDraw.setPenRadius(0.01);
+        node.point.draw();
+
+        drawNode(node.left, leftArea, !isV);
+        drawNode(node.right, rightArea, !isV);
     }
 
     // all points that are inside the rectangle (or on the boundary)
@@ -140,22 +147,109 @@ public class KdTree {
         if (rect == null) throw new IllegalArgumentException();
 
         final Queue<Point2D> result = new Queue<>();
+        if (size == 0) return result;
+
+        checkRect(root, rect, true, result);
 
         return result;
     }
 
-    // a nearest neighbor in the set to point p; null if the set is empty
+    private void checkRect(Node node, RectHV rect, boolean isV, Queue<Point2D> result) {
+        if (rect.contains(node.point))
+            result.enqueue(node.point);
+
+        // test location of rect relatively to the node sides to reduce lookups
+        if (isV) { // test left / right sides
+            if (node.left != null && rect.xmax() >= node.point.x())
+                checkRect(node.left, rect, false, result);
+            if (node.right != null && rect.xmin() < node.point.x())
+                checkRect(node.right, rect, false, result);
+        } else { // top (left) / bottom (right) sides
+            if (node.left != null && rect.ymax() >= node.point.y())
+                checkRect(node.left, rect, true, result);
+            if (node.right != null && rect.ymin() < node.point.y())
+                checkRect(node.right, rect, true, result);
+        }
+    }
+
+    // a nearest neighbor in the set to point; null if the set is empty
     public Point2D nearest(Point2D target) {
         if (target == null) throw new IllegalArgumentException();
+        if (size == 0) return null;
 
-        Point2D np = null;
-        double minDistance = Double.MAX_VALUE;
-        return np;
+        NearestChampion champion = new NearestChampion();
+        champion.distance = Double.MAX_VALUE;
+        champion.point = null;
+
+        findNearest(target, root, new RectHV(0, 0, 1, 1), true, champion);
+
+        return champion.point;
     }
+
+    private void findNearest(Point2D target, Node node, RectHV area, boolean isV, NearestChampion champion) {
+        if (node == null) return;
+
+        // make decision if the node is relevant to search in
+        if (!isWorthArea(target, area, champion.distance)) return;
+
+        double distance = target.distanceSquaredTo(node.point);
+        if (distance < champion.distance) {
+            champion.distance = distance;
+            champion.point = node.point;
+        }
+
+        // cut off tree
+        if (isV) {
+            if (node.left != null) {
+                findNearest(target, node.left, getLeftArea(node.point, area), false, champion);
+            }
+            if (node.right != null) {
+                findNearest(target, node.right, getRightArea(node.point, area), false, champion);
+            }
+        } else {
+            if (node.left != null) {
+                findNearest(target, node.left, getTopArea(node.point, area), true, champion);
+            }
+            if (node.right != null) {
+                findNearest(target, node.right, getBottomArea(node.point, area), true, champion);
+            }
+        }
+    }
+
+    private boolean isWorthArea(Point2D target, RectHV area, double championDistance) {
+        if (area.contains(target)) return true;
+
+        Point2D checkPoint1 = target.x() < area.xmin()
+                ? new Point2D(area.xmin(), target.y()) // right border
+                : new Point2D(area.xmax(), target.y()); // left border
+
+        Point2D checkPoint2 = target.y() < area.ymin()
+                ? new Point2D(target.x(), area.ymin())  // bottom border
+                : new Point2D(target.x(), area.ymax()); // top border
+
+        return target.distanceSquaredTo(checkPoint1) < championDistance ||
+                target.distanceSquaredTo(checkPoint2) < championDistance;
+    }
+
+    private RectHV getRightArea(Point2D middlePoint, RectHV area) {
+        return new RectHV(area.xmin(), area.ymin(), middlePoint.x(), area.ymax());
+    }
+
+    private RectHV getLeftArea(Point2D middlePoint, RectHV area) {
+        return new RectHV(middlePoint.x(), area.ymin(), area.xmax(), area.ymax());
+    }
+
+    private RectHV getBottomArea(Point2D middlePoint, RectHV area) {
+        return new RectHV(area.xmin(), area.ymin(), area.xmax(), middlePoint.y());
+    }
+
+    private RectHV getTopArea(Point2D middlePoint, RectHV area) {
+        return new RectHV(area.xmin(), middlePoint.y(), area.xmax(), area.ymax());
+    }
+
 
     public static void main(String[] args) {
         KdTree pointSET;
-        int v;
 
         pointSET = fixture("Construction");
         test("is empty", pointSET.isEmpty());
@@ -166,7 +260,6 @@ public class KdTree {
         pointSET.insert(new Point2D(0.2, 0.2));
         test("is not empty", !pointSET.isEmpty());
         test("size is 2", pointSET.size() == 2);
-
     }
 
     private static KdTree fixture(String description) {

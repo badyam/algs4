@@ -9,7 +9,12 @@
  *  http://coursera.cs.princeton.edu/algs4/assignments/kdtree.html
  *----------------------------------------------------------------*/
 
-import edu.princeton.cs.algs4.*;
+import edu.princeton.cs.algs4.Point2D;
+import edu.princeton.cs.algs4.Queue;
+import edu.princeton.cs.algs4.RectHV;
+import edu.princeton.cs.algs4.SET;
+import edu.princeton.cs.algs4.StdDraw;
+import edu.princeton.cs.algs4.StdOut;
 
 public class PointSET {
 
@@ -66,11 +71,12 @@ public class PointSET {
     // a nearest neighbor in the set to point p; null if the set is empty
     public Point2D nearest(Point2D target) {
         if (target == null) throw new IllegalArgumentException();
+        if (isEmpty()) return null;
 
         Point2D np = null;
         double minDistance = Double.MAX_VALUE;
         for (Point2D p : set) {
-            double distance = p.distanceTo(target);
+            double distance = p.distanceSquaredTo(target);
             if (distance < minDistance) {
                 np = p;
                 minDistance = distance;
@@ -82,7 +88,6 @@ public class PointSET {
 
     public static void main(String[] args) {
         PointSET pointSET;
-        int v;
 
         pointSET = fixture("Construction");
         test("is empty", pointSET.isEmpty());
