@@ -17,6 +17,8 @@ import edu.princeton.cs.algs4.Point2D;
 import edu.princeton.cs.algs4.RectHV;
 import edu.princeton.cs.algs4.StdDraw;
 
+import java.awt.Color;
+
 public class RangeSearchVisualizer {
 
     public static void main(String[] args) {
@@ -25,13 +27,17 @@ public class RangeSearchVisualizer {
         In in = new In(filename);
 
         StdDraw.enableDoubleBuffering();
+        StdDraw.clear();
 
         // initialize the data structures with N points from standard input
         PointSET brute = new PointSET();
         KdTree kdtree = new KdTree();
+        int i = 0;
         while (!in.isEmpty()) {
             double x = in.readDouble();
             double y = in.readDouble();
+            StdDraw.setPenColor(Color.DARK_GRAY);
+            StdDraw.textRight(x + 0.03, y + 0.02, Character.toString((char) (65 + i++ % 255)));
             Point2D p = new Point2D(x, y);
             kdtree.insert(p);
             brute.insert(p);
@@ -42,7 +48,6 @@ public class RangeSearchVisualizer {
         boolean isDragging = false;     // is the user dragging a rectangle
 
         // draw the points
-        StdDraw.clear();
         StdDraw.setPenColor(StdDraw.BLACK);
         StdDraw.setPenRadius(0.01);
         brute.draw();
@@ -74,7 +79,7 @@ public class RangeSearchVisualizer {
             RectHV rect = new RectHV(Math.min(x0, x1), Math.min(y0, y1),
                                      Math.max(x0, x1), Math.max(y0, y1));
             // draw the points
-            StdDraw.clear();
+            // StdDraw.clear();
             StdDraw.setPenColor(StdDraw.BLACK);
             StdDraw.setPenRadius(0.01);
             brute.draw();

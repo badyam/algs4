@@ -42,6 +42,12 @@ public class KdTreeVisualizer {
                 StdDraw.textRight(x + 0.03, y + 0.02, Character.toString((char) (65 + i++ % 255)));
             }
             kdtree.draw();
+
+            StdDraw.setPenColor(Color.GREEN);
+            StdDraw.setPenRadius();
+
+            new RectHV(0.21, 0.41, 0.4, 0.5).draw();
+
             StdDraw.show();
         } else {
             RectHV rect = new RectHV(0.0, 0.0, 1.0, 1.0);

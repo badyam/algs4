@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="07c25bfd-509d-485f-bbf8-8dac88683682" name="Default" comment="Kd-tree final implementation">
+    <list default="true" id="07c25bfd-509d-485f-bbf8-8dac88683682" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/in/input5.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/KdTree.java" afterPath="$PROJECT_DIR$/src/KdTree.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/KdTreeVisualizer.java" afterPath="$PROJECT_DIR$/src/KdTreeVisualizer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/NearestNeighborVisualizer.java" afterPath="$PROJECT_DIR$/src/NearestNeighborVisualizer.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/PointSET.java" afterPath="$PROJECT_DIR$/src/PointSET.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/RangeSearchVisualizer.java" afterPath="$PROJECT_DIR$/src/RangeSearchVisualizer.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -21,19 +21,16 @@
       <file leaf-file-name="KdTree.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/KdTree.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="245">
-              <caret line="156" column="73" lean-forward="false" selection-start-line="156" selection-start-column="73" selection-end-line="156" selection-end-column="73" />
+            <state relative-caret-position="244">
+              <caret line="177" column="35" lean-forward="true" selection-start-line="177" selection-start-column="35" selection-end-line="177" selection-end-column="35" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1175#1176#0" expanded="true" />
                 <element signature="e#1207#1208#0" expanded="true" />
                 <element signature="e#1267#1268#0" expanded="true" />
                 <element signature="e#1294#1295#0" expanded="true" />
-                <element signature="e#3113#3114#0" expanded="true" />
-                <element signature="e#3173#3174#0" expanded="true" />
-                <element signature="method#drawNode#0;class#KdTree#0" expanded="false" />
-                <element signature="method#range#0;class#KdTree#0" expanded="false" />
-                <element signature="method#checkRect#0;class#KdTree#0" expanded="false" />
+                <element signature="e#3111#3112#0" expanded="true" />
+                <element signature="e#3171#3172#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -42,9 +39,11 @@
       <file leaf-file-name="RectHV.java" pinned="false" current-in-tab="false">
         <entry file="jar://$PROJECT_DIR$/../../lib/algs4.jar!/edu/princeton/cs/algs4/RectHV.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="252">
-              <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
-              <folding />
+            <state relative-caret-position="125">
+              <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+              <folding>
+                <element signature="e#2708#2709#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -72,12 +71,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RangeSearchVisualizer.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="input5.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/in/input5.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RangeSearchVisualizer.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/RangeSearchVisualizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="21" column="44" lean-forward="false" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="44" />
-              <folding />
+            <state relative-caret-position="-329">
+              <caret line="72" column="38" lean-forward="false" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -94,11 +105,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="KdTreeVisualizer.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="KdTreeVisualizer.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/KdTreeVisualizer.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+            <state relative-caret-position="276">
+              <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -111,16 +122,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
               <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="StdDraw.java" pinned="false" current-in-tab="false">
-        <entry file="jar://$PROJECT_DIR$/../../lib/algs4.jar!/edu/princeton/cs/algs4/StdDraw.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-888">
-              <caret line="753" column="23" lean-forward="false" selection-start-line="753" selection-start-column="23" selection-end-line="753" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -146,6 +147,7 @@
       <find>insert</find>
       <find>conta</find>
       <find>recta</find>
+      <find>cle</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -159,11 +161,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/RangeSearchVisualizer.java" />
         <option value="$PROJECT_DIR$/src/PointSET.java" />
         <option value="$PROJECT_DIR$/src/NearestNeighborVisualizer.java" />
-        <option value="$PROJECT_DIR$/src/KdTree.java" />
+        <option value="$PROJECT_DIR$/src/RangeSearchVisualizer.java" />
+        <option value="$PROJECT_DIR$/in/input5.txt" />
         <option value="$PROJECT_DIR$/src/KdTreeVisualizer.java" />
+        <option value="$PROJECT_DIR$/src/KdTree.java" />
       </list>
     </option>
   </component>
@@ -217,6 +220,11 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="org.infernus.idea.checkstyle.CheckStyleConfigurable" />
   </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Learning\coursera\algs4\assignments\5-kd-trees\in" />
+    </key>
+  </component>
   <component name="RunDashboard">
     <option name="ruleStates">
       <list>
@@ -229,7 +237,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.NearestNeighborVisualizer">
+  <component name="RunManager" selected="Application.KdTree">
     <configuration name="KdTree" type="Application" factoryName="Application">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="KdTree" />
@@ -248,7 +256,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="KdTreeVisualizer" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="in\circle10.txt" />
+      <option name="PROGRAM_PARAMETERS" value="in\input5.txt" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -290,7 +298,7 @@
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="RangeSearchVisualizer" />
       <option name="VM_PARAMETERS" value="" />
-      <option name="PROGRAM_PARAMETERS" value="in\circle100.txt" />
+      <option name="PROGRAM_PARAMETERS" value="in\input10.txt" />
       <option name="WORKING_DIRECTORY" value="file://$PROJECT_DIR$" />
       <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
       <option name="ALTERNATIVE_JRE_PATH" />
@@ -404,7 +412,21 @@
       <option name="project" value="LOCAL" />
       <updated>1504802117343</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Kd-tree final implementation">
+      <created>1504850182767</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1504850182767</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Kd-tree final implementation">
+      <created>1504853578742</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1504853578742</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -420,9 +442,9 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.17391305" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32898173" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CheckStyle" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.388123" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32873806" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="CheckStyle" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32979852" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -432,7 +454,7 @@
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.51007426" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
@@ -452,7 +474,17 @@
     <option name="LAST_COMMIT_MESSAGE" value="Kd-tree final implementation" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/KdTree.java</url>
+          <line>271</line>
+          <properties />
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
@@ -466,11 +498,8 @@
             <element signature="e#1207#1208#0" expanded="true" />
             <element signature="e#1267#1268#0" expanded="true" />
             <element signature="e#1294#1295#0" expanded="true" />
-            <element signature="e#3113#3114#0" expanded="true" />
-            <element signature="e#3173#3174#0" expanded="true" />
-            <element signature="method#drawNode#0;class#KdTree#0" expanded="false" />
-            <element signature="method#range#0;class#KdTree#0" expanded="false" />
-            <element signature="method#checkRect#0;class#KdTree#0" expanded="false" />
+            <element signature="e#3111#3112#0" expanded="true" />
+            <element signature="e#3171#3172#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -548,11 +577,8 @@
             <element signature="e#1207#1208#0" expanded="true" />
             <element signature="e#1267#1268#0" expanded="true" />
             <element signature="e#1294#1295#0" expanded="true" />
-            <element signature="e#3113#3114#0" expanded="true" />
-            <element signature="e#3173#3174#0" expanded="true" />
-            <element signature="method#drawNode#0;class#KdTree#0" expanded="false" />
-            <element signature="method#range#0;class#KdTree#0" expanded="false" />
-            <element signature="method#checkRect#0;class#KdTree#0" expanded="false" />
+            <element signature="e#3111#3112#0" expanded="true" />
+            <element signature="e#3171#3172#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -620,11 +646,8 @@
             <element signature="e#1207#1208#0" expanded="true" />
             <element signature="e#1267#1268#0" expanded="true" />
             <element signature="e#1294#1295#0" expanded="true" />
-            <element signature="e#3113#3114#0" expanded="true" />
-            <element signature="e#3173#3174#0" expanded="true" />
-            <element signature="method#drawNode#0;class#KdTree#0" expanded="false" />
-            <element signature="method#range#0;class#KdTree#0" expanded="false" />
-            <element signature="method#checkRect#0;class#KdTree#0" expanded="false" />
+            <element signature="e#3111#3112#0" expanded="true" />
+            <element signature="e#3171#3172#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -672,14 +695,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/in/input10.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://$PROJECT_DIR$/../../lib/algs4.jar!/edu/princeton/cs/algs4/StdDraw.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-888">
@@ -692,22 +707,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/RangeSearchVisualizer.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="21" column="44" lean-forward="false" selection-start-line="21" selection-start-column="44" selection-end-line="21" selection-end-column="44" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/../../lib/algs4.jar!/edu/princeton/cs/algs4/RectHV.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="252">
-          <caret line="41" column="11" lean-forward="false" selection-start-line="41" selection-start-column="11" selection-end-line="41" selection-end-column="11" />
           <folding />
         </state>
       </provider>
@@ -733,29 +732,62 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/in/input10.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="0" lean-forward="false" selection-start-line="10" selection-start-column="0" selection-end-line="10" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/in/input5.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/KdTreeVisualizer.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="276">
+          <caret line="48" column="0" lean-forward="false" selection-start-line="48" selection-start-column="0" selection-end-line="48" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/../../lib/algs4.jar!/edu/princeton/cs/algs4/RectHV.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="125">
+          <caret line="70" column="0" lean-forward="false" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding>
+            <element signature="e#2708#2709#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/KdTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="245">
-          <caret line="156" column="73" lean-forward="false" selection-start-line="156" selection-start-column="73" selection-end-line="156" selection-end-column="73" />
+        <state relative-caret-position="244">
+          <caret line="177" column="35" lean-forward="true" selection-start-line="177" selection-start-column="35" selection-end-line="177" selection-end-column="35" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1175#1176#0" expanded="true" />
             <element signature="e#1207#1208#0" expanded="true" />
             <element signature="e#1267#1268#0" expanded="true" />
             <element signature="e#1294#1295#0" expanded="true" />
-            <element signature="e#3113#3114#0" expanded="true" />
-            <element signature="e#3173#3174#0" expanded="true" />
-            <element signature="method#drawNode#0;class#KdTree#0" expanded="false" />
-            <element signature="method#range#0;class#KdTree#0" expanded="false" />
-            <element signature="method#checkRect#0;class#KdTree#0" expanded="false" />
+            <element signature="e#3111#3112#0" expanded="true" />
+            <element signature="e#3171#3172#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/KdTreeVisualizer.java">
+    <entry file="file://$PROJECT_DIR$/src/RangeSearchVisualizer.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="17" column="0" lean-forward="true" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
+        <state relative-caret-position="-329">
+          <caret line="72" column="38" lean-forward="false" selection-start-line="72" selection-start-column="38" selection-end-line="72" selection-end-column="38" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

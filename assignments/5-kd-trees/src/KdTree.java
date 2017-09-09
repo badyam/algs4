@@ -72,7 +72,7 @@ public class KdTree {
                 ? Double.compare(point.x(), parent.point.x())
                 : Double.compare(point.y(), parent.point.y());
 
-        if (cmp >= 0) { // left
+        if (cmp > 0) { // left
             if (parent.left == null)
                 parent.left = new Node(point);
             else
@@ -105,7 +105,7 @@ public class KdTree {
                 ? Double.compare(point.x(), node.point.x())
                 : Double.compare(point.y(), node.point.y());
 
-        return find(cmp >= 0 ? node.left : node.right, !isV, point);
+        return find(cmp > 0 ? node.left : node.right, !isV, point);
     }
 
 
@@ -138,8 +138,8 @@ public class KdTree {
         StdDraw.setPenRadius(0.01);
         node.point.draw();
 
-        drawNode(node.left, leftArea, !isV);
         drawNode(node.right, rightArea, !isV);
+        drawNode(node.left, leftArea, !isV);
     }
 
     // all points that are inside the rectangle (or on the boundary)
@@ -160,15 +160,15 @@ public class KdTree {
 
         // test location of rect relatively to the node sides to reduce lookups
         if (isV) { // test left / right sides
-            if (node.left != null && rect.xmax() >= node.point.x())
-                checkRect(node.left, rect, false, result);
-            if (node.right != null && rect.xmin() < node.point.x())
+            if (node.right != null && rect.xmin() <= node.point.x())
                 checkRect(node.right, rect, false, result);
+            if (node.left != null && rect.xmax() > node.point.x())
+                checkRect(node.left, rect, false, result);
         } else { // top (left) / bottom (right) sides
-            if (node.left != null && rect.ymax() >= node.point.y())
-                checkRect(node.left, rect, true, result);
-            if (node.right != null && rect.ymin() < node.point.y())
+            if (node.right != null && rect.ymin() <= node.point.y())
                 checkRect(node.right, rect, true, result);
+            if (node.left != null && rect.ymax() > node.point.y())
+                checkRect(node.left, rect, true, result);
         }
     }
 
@@ -249,17 +249,28 @@ public class KdTree {
 
 
     public static void main(String[] args) {
-        KdTree pointSET;
+        KdTree tree;
 
-        pointSET = fixture("Construction");
-        test("is empty", pointSET.isEmpty());
-        test("size is zero", pointSET.size() == 0);
+        tree = fixture("Construction");
+        test("is empty", tree.isEmpty());
+        test("size is zero", tree.size() == 0);
 
-        pointSET = fixture("insert two points");
-        pointSET.insert(new Point2D(0.5, 0.5));
-        pointSET.insert(new Point2D(0.2, 0.2));
-        test("is not empty", !pointSET.isEmpty());
-        test("size is 2", pointSET.size() == 2);
+        tree = fixture("insert two points");
+        tree.insert(new Point2D(0.5, 0.5));
+        tree.insert(new Point2D(0.2, 0.2));
+        test("is not empty", !tree.isEmpty());
+        test("size is 2", tree.size() == 2);
+
+        tree = fixture("input5 range");
+        tree.insert(new Point2D(0.7, 0.2)); // A
+        tree.insert(new Point2D(0.5, 0.4)); // B
+        tree.insert(new Point2D(0.2, 0.3)); // C
+        tree.insert(new Point2D(0.4, 0.7)); // D
+        tree.insert(new Point2D(0.9, 0.6)); // E
+        RectHV rect = new RectHV(0.21, 0.41, 0.4, 0.5);
+        test("size is 5", tree.size() == 5);
+        test("range() not null", tree.range(rect) != null);
+
     }
 
     private static KdTree fixture(String description) {
