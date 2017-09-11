@@ -27,9 +27,9 @@ public class KdTreeVisualizer {
             In in = new In(filename);
 
             StdDraw.enableDoubleBuffering();
-            StdDraw.setScale(-0.1, 1.1);
+            StdDraw.setScale(-0.05, 1.05);
             StdDraw.setPenColor(Color.LIGHT_GRAY);
-            StdDraw.rectangle(0.5, 0.5, 0.5, 0.5);
+            new RectHV(0, 0, 1, 1).draw();
 
             // initialize the data structures with N points from standard input
             int i = 0;
@@ -46,7 +46,11 @@ public class KdTreeVisualizer {
             StdDraw.setPenColor(Color.GREEN);
             StdDraw.setPenRadius();
 
-            new RectHV(0.21, 0.41, 0.4, 0.5).draw();
+            new RectHV(0.21, 0.4, 0.41, 0.5).draw();
+
+            StdDraw.setPenColor(Color.YELLOW);
+            StdDraw.setPenRadius(0.1);
+            new Point2D(0.09, 0.53).draw();
 
             StdDraw.show();
         } else {
